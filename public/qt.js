@@ -10,16 +10,6 @@ class Quadtree {
     this.hasSplit = false
   }
 
-  show() {
-    stroke(255);
-    noFill();
-    rect(this.x + 1, this.y + 1, this.sizex - 1, this.sizey - 1);
-    if (this.hasSplit) {
-      let tcl =this.children.length
-      for (let i = 0; i < tcl; i++) this.children[i].show()
-    }
-  }
-
   isFull() {
     return (this.items.length >= this.capacity)
   }
@@ -55,8 +45,9 @@ class Quadtree {
   }
 
   give(item) {
-    let tcl = this.children.length
-    for (let i = 0; i < tcl; i++) this.children[i].insert(item)
+    this.children.forEach(child => child.insert(item))
+    // for (let i = 0; i < this.children.length; i++) this.children[i].insert(item)
+    this.children.forEach(child => child.insert(item))
   }
 
   insert(item) {
@@ -73,8 +64,7 @@ class Quadtree {
 
   ask(area, itemsArr) {
     if (this.intersects(area)) {
-      let til =this.items.length
-      for (let i = 0; i < til; i++) {
+      for (let i = 0; i < this.items.length; i++) {
         let d = dist(this.items[i].x, this.items[i].y, area.x, area.y)
         if (d < area.r) itemsArr.push(this.items[i])
       }
@@ -84,5 +74,14 @@ class Quadtree {
       }
     }
     return itemsArr;
+  }
+  show() {
+    stroke(255);
+    noFill();
+    rect(this.x + 1, this.y + 1, this.sizex - 1, this.sizey - 1);
+    if (this.hasSplit) {
+      let tcl = this.children.length
+      for (let i = 0; i < tcl; i++) this.children[i].show()
+    }
   }
 }
